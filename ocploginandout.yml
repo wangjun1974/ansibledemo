@@ -1,7 +1,7 @@
 - hosts: localhost
   module_defaults:
     group/k8s:
-      host: https://k8s.example.com/
+      host: https://api.ocp1.rhcnsa.com:6443
   tasks:
   - block:
     # It's good practice to store login credentials in a secure vault and not
