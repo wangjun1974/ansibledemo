@@ -1,18 +1,15 @@
 - hosts: localhost
-  module_defaults:
-    group/k8s:
-      host: https://api.ocp1.rhcnsa.com:6443
   tasks:
   - block:
     # It's good practice to store login credentials in a secure vault and not
     # directly in playbooks.
-    - include_vars: openshift_passwords.yml
+    - include_vars: openshift_envs.yml
 
     - name: Log in (obtain access token)
       community.okd.openshift_auth:
-        username: user20
-        password: "{{ openshift_user20_password }}"
-        host: "https://api.ocp1.rhcnsa.com:6443"
+        username: "{{ openshift_user_name }}"
+        password: "{{ openshift_user_password }}"
+        host: "{{ openshift_api_url }}"
         validate_certs: no
       register: openshift_auth_results
 
@@ -21,7 +18,7 @@
     - name: Get a list of all pods from any namespace
       kubernetes.core.k8s_info:
         api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
-        host: "https://api.ocp1.rhcnsa.com:6443"
+        host: "{{ openshift_api_url }}"
         kind: Pod
         validate_certs: no
       register: pod_list
@@ -32,5 +29,5 @@
       community.okd.openshift_auth:
         state: absent
         api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
-        host: "https://api.ocp1.rhcnsa.com:6443"
+        host: "{{ openshift_api_url }}"
         validate_certs: no
