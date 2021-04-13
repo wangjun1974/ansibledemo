@@ -4,6 +4,7 @@
     # It's good practice to store login credentials in a secure vault and not
     # directly in playbooks.
     - include_vars: openshift_envs.yml
+      no_log: true
 
     - name: Log in (obtain access token)
       community.okd.openshift_auth:
